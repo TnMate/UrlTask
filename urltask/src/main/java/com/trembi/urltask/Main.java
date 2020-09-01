@@ -19,8 +19,4 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello there General Kenobi!\n");
     }
-    
-    private static void printInteger(int number) {
-        System.out.println(number);
-    }
 }
