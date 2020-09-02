@@ -16,7 +16,7 @@ public class HtmlObject {
     private final String type;
     private final String value;
     
-    public HtmlObject(String type, String value) {
+    public HtmlObject(String type, String value) {//
         this.type = type;
         this.value = value;
     }
