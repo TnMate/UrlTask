@@ -20,11 +20,13 @@ public class Main {
      */
     public static void main(String[] args) {
         UrlAnalyzer analyzer = new UrlAnalyzer();
-        String[] urlArray = {"https://people.inf.elte.hu/miszuu/"};
+        String[] urlArray = {"https://people.inf.elte.hu/miszuu/", "https://people.inf.elte.hu/miszuu/mykitties.html","https://people.inf.elte.hu/miszuu/dogs.html"};
         int size = urlArray.length;
         
         for (int i = 0; i < size; i++) {
             analyzer.processUrl(urlArray[i]);
+            System.out.println(urlArray[i] + " webpage's 10 most common words:");
+            analyzer.biggestWords(10);
         }
        
     }
