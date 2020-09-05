@@ -57,7 +57,7 @@ public class UrlAnalyzer {
             processString();
             counter.countBiggestWords();
 
-        } catch (Exception e) {
+        } catch (Exception e) { // TODO MT: exception handling?
             // TODO: Handle the exception
         }
     }
@@ -112,8 +112,7 @@ public class UrlAnalyzer {
      * @param startIndex start of the tag
      * @param endIndex end of the tag
      */
-    private void processTag(int startIndex, int endIndex) {
-        
+    private void processTag(int startIndex, int endIndex) {        
         if (startIndex < 1 || endIndex < 1) {
             System.err.println("Wrong start or end index");
         }
@@ -129,8 +128,7 @@ public class UrlAnalyzer {
         }
     }
     
-    private String getNameOfTag(int startIndex, int endIndex) {
-        
+    private String getNameOfTag(int startIndex, int endIndex) {        
         for (int i = startIndex + 1; i < endIndex; i++) {
             if (htmlString.charAt(i) == ' ') {
                 return htmlString.substring(startIndex, i);
@@ -141,15 +139,14 @@ public class UrlAnalyzer {
     }
     
     private void addTag(String type) {
-        htmlList.addLast(new HtmlObject("tag", type));
+        htmlList.addLast(new HtmlObject("tag", type)); // TODO MT: if you use "tag" String more than once than please create a constant
     }
     
     /**
      * This method removes the tag and processes the tags and texts between the start and end tag.
      * @param type type of the tag
      */
-    private void removeTag(String type) {
-        
+    private void removeTag(String type) {        
         HtmlObject ob = htmlList.getLast();
         boolean isSkip = skipTags.contains(type);
         
@@ -166,10 +163,9 @@ public class UrlAnalyzer {
     }
     
     private void processText(int startIndex, int endIndex) {
-        
         if (startIndex < 1 || endIndex < 1) {
             System.err.println("Wrong start or end index");
-        }
+        }// TODO MT: you know that start and end index is wrong but you continue using them??? you can throw an exeption
         
         String value = htmlString.substring(startIndex, endIndex+1);
         htmlList.addLast(new HtmlObject("text", value));
@@ -181,10 +177,8 @@ public class UrlAnalyzer {
      * @throws Exception 
      */
     private void readUrl(String url) throws Exception{
-        
         URL site = new URL(url);
-        BufferedReader in = new BufferedReader(
-        new InputStreamReader(site.openStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(site.openStream()));
         StringBuilder sb = new StringBuilder();
 
         String inputLine;

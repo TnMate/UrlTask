@@ -19,9 +19,9 @@ import java.util.Map;
  */
 public class WordCounter {
     
-    private HashMap<String, Integer> hashMap;
+    private HashMap<String, Integer> hashMap; // TODO MT: please use a better variable name :)
     private HashSet<String> skipWords;
-    private ArrayList<Map.Entry> arrayList;
+    private ArrayList<Map.Entry> arrayList; // TODO MT: please use a better variable name :)
     
     /**
      * Initializes the fields.
@@ -39,15 +39,14 @@ public class WordCounter {
         arrayList = new ArrayList<>();
     }
     
-    public void add(String str) {
+    public void add(String str) { // TODO MT: I think here javadoc is really missing! I have to check the body of this method
         String[] words = str.split("\\W+");
-        for (String s : words) {
-            if (hashMap.containsKey(s)) {
-                Integer i = hashMap.get(s);
-                hashMap.replace(s, i+1);
-            } else if (!skipWords.contains(s)) {
-                hashMap.put(s.toLowerCase(), 1);
-            }
+        for (String s : words) {  // TODO MT: please check my version of this for loop body, don't use this type of for loop 
+            if ( skipWords.contains(s) )
+                continue;
+            
+            Integer i = hashMap.get(s);
+            hashMap.put(s, i == null ? 1 : i+1);
         }
     }
     
@@ -70,8 +69,7 @@ public class WordCounter {
     /**
      * Analyzes every word which is stored in the Map.
      */
-    public void countBiggestWords() {
-        
+    public void countBiggestWords() { // TODO MT: I don't like this method :) I will explain in person why
         arrayList.clear();
         Iterator it = hashMap.entrySet().iterator();
         
@@ -95,13 +93,9 @@ public class WordCounter {
      * Prints at most n word, number pair in descending order by the number.
      * @param n 
      */
-    public void printWords(int n) {
-        
-        int size = arrayList.size();
-        
-        for (int i = 0; i < n && i < size; i++) {
-            System.out.println(arrayList.get(i).getKey() + " = " 
-                    + arrayList.get(i).getValue());
+    public void printWords(int n) { // TODO MT: since variable 'size' is used only in the FOR  loop define it always as part of the FOR statement
+        for (int i = 0, size = arrayList.size(); i < n && i < size; i++) {
+            System.out.println(arrayList.get(i).getKey() + " = " + arrayList.get(i).getValue());
         }
     }
    
