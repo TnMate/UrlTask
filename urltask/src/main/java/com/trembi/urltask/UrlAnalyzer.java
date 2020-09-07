@@ -47,19 +47,13 @@ public class UrlAnalyzer {
     
     /**
      * 
-     * @param url Website's url
+     * @param url WebPage's url
+     * @throws IOException Exception while reading the website.
      */
-    public void processUrl(String url) {
-        
-        try {
-            clean();
-            readUrl(url);
-            processString();
-            counter.countBiggestWords();
-
-        } catch (Exception e) { // TODO MT: exception handling?
-            // TODO: Handle the exception
-        }
+    public void processUrl(String url) throws IOException {
+        clean();
+        readUrl(url);
+        processString();
     }
     
     public void biggestWords(int number) {
@@ -67,7 +61,7 @@ public class UrlAnalyzer {
     }
     
     /**
-     * Analyzes the Website's html code
+     * Analyzes the Website's HTML code
      */
     private void processString() {
         
@@ -102,7 +96,6 @@ public class UrlAnalyzer {
                         break;
                     }
                 }
-                // TODO: process the String between tags
             }
         }
     }
@@ -115,6 +108,7 @@ public class UrlAnalyzer {
     private void processTag(int startIndex, int endIndex) {        
         if (startIndex < 1 || endIndex < 1) {
             System.err.println("Wrong start or end index");
+            return;
         }
         
         String nameOfTag;
@@ -139,7 +133,7 @@ public class UrlAnalyzer {
     }
     
     private void addTag(String type) {
-        htmlList.addLast(new HtmlObject("tag", type)); // TODO MT: if you use "tag" String more than once than please create a constant
+        htmlList.addLast(new HtmlObject(HtmlObject.Type.TAG, type));
     }
     
     /**
@@ -150,9 +144,9 @@ public class UrlAnalyzer {
         HtmlObject ob = htmlList.getLast();
         boolean isSkip = skipTags.contains(type);
         
-        while (!(ob.getType().equals("tag") && ob.getvalue().equals(type))) {
-            if (!isSkip && ob.getType().equals("text")) {
-                counter.add(ob.getvalue());
+        while (!(ob.getType().equals(HtmlObject.Type.TAG) && ob.getvalue().equals(type))) {
+            if (!isSkip && ob.getType().equals(HtmlObject.Type.TEXT)) {
+                counter.addLine(ob.getvalue());
             }
             htmlList.removeLast();
             ob = htmlList.getLast();
@@ -165,18 +159,19 @@ public class UrlAnalyzer {
     private void processText(int startIndex, int endIndex) {
         if (startIndex < 1 || endIndex < 1) {
             System.err.println("Wrong start or end index");
-        }// TODO MT: you know that start and end index is wrong but you continue using them??? you can throw an exeption
+            return;
+        }
         
         String value = htmlString.substring(startIndex, endIndex+1);
-        htmlList.addLast(new HtmlObject("text", value));
+        htmlList.addLast(new HtmlObject(HtmlObject.Type.TEXT, value));
     }
     
     /**
      * Reads the website from the given url and loads into a field as String
      * @param url Website's url
-     * @throws Exception 
+     * @throws IOException 
      */
-    private void readUrl(String url) throws Exception{
+    private void readUrl(String url) throws IOException{
         URL site = new URL(url);
         BufferedReader in = new BufferedReader(new InputStreamReader(site.openStream()));
         StringBuilder sb = new StringBuilder();

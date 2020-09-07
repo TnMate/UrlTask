@@ -7,6 +7,8 @@
  */
 package com.trembi.urltask;
 
+import java.io.IOException;
+
 
 
 /**
@@ -25,13 +27,16 @@ public class Main {
             "https://people.inf.elte.hu/miszuu/", 
             "https://people.inf.elte.hu/miszuu/mykitties.html",
             "https://people.inf.elte.hu/miszuu/dogs.html"
-        }; // TODO MT: please keep the 132 charaters limit! this way it is more readable
+        };
         
-        for (int i = 0, size = urlArray.length; i < size; i++) { // TODO MT: since variable 'size' is used only in the FOR  loop...
-            analyzer.processUrl(urlArray[i]);                   // ...define it always as part of the FOR statement
-            System.out.println(urlArray[i] + " webpage's 10 most common words:");
-            analyzer.biggestWords(10);
+        for (int i = 0, size = urlArray.length; i < size; i++) {
+            try {
+                analyzer.processUrl(urlArray[i]);
+                System.out.println(urlArray[i] + " webpage's 10 most common words:");
+                analyzer.biggestWords(10);
+            } catch (IOException e) {
+                System.err.println("Error while loading a webpage, maybe wrong Url: " + e.getMessage());
+            }
         }
-       
     }
 }

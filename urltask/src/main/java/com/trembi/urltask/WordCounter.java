@@ -14,40 +14,59 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
+ * It counts the words which are added to this class.
  * @author matet
  */
 public class WordCounter {
     
-    private HashMap<String, Integer> hashMap; // TODO MT: please use a better variable name :)
-    private HashSet<String> skipWords;
-    private ArrayList<Map.Entry> arrayList; // TODO MT: please use a better variable name :)
+    /**
+     * It contains the stored words with counts.
+     */
+    private final HashMap<String, Integer> wordsMap;
+    
+    /**
+     * It contains which words to omit.
+     */
+    private final HashSet<String> skipWords;
     
     /**
      * Initializes the fields.
      */
     public WordCounter() {
-        clean();
+        wordsMap = new HashMap<>();
+        skipWords = new HashSet<>();
     }
     
     /**
-     * Resets the stored words, skippable words, list fields in the object.
+     * Resets the stored words, omittable words, list fields in the object.
      */
     public final void clean() {
-        hashMap = new HashMap<>();
-        skipWords = new HashSet<>();
-        arrayList = new ArrayList<>();
+        wordsMap.clear();
+        skipWords.clear();
     }
     
-    public void add(String str) { // TODO MT: I think here javadoc is really missing! I have to check the body of this method
+    /**
+     * Separates the input into words and adds them if they are not omittable.
+     * @param str Line to separate and add the words in it.
+     */
+    public void addLine(String str) {
         String[] words = str.split("\\W+");
-        for (String s : words) {  // TODO MT: please check my version of this for loop body, don't use this type of for loop 
-            if ( skipWords.contains(s) )
-                continue;
-            
-            Integer i = hashMap.get(s);
-            hashMap.put(s, i == null ? 1 : i+1);
+        for (String s : words) { 
+            addWord(s);
         }
+    }
+    
+    /**
+     * Adds a word into the map if it is not omittable.
+     * @param s Word to be added.
+     */
+    public void addWord(String s) {
+        s = s.toLowerCase();
+        if ( skipWords.contains(s) )
+            return;
+            
+        Integer i = wordsMap.get(s);
+        wordsMap.put(s, i == null ? 1 : i+1);
     }
     
     /**
@@ -67,35 +86,39 @@ public class WordCounter {
     }
     
     /**
-     * Analyzes every word which is stored in the Map.
+     * Returns a sorted Array by value with every word which is stored in the Map.
      */
-    public void countBiggestWords() { // TODO MT: I don't like this method :) I will explain in person why
-        arrayList.clear();
-        Iterator it = hashMap.entrySet().iterator();
+    private ArrayList<Map.Entry> sortMap(int n) {
+        ArrayList<Map.Entry> words = new ArrayList();
+        Iterator it = wordsMap.entrySet().iterator();
+        int size = 0;
         
         while (it.hasNext()) {
             int i  = 0;
-            int size = arrayList.size();
+            size = size < n ? words.size() : n;
             Map.Entry pair = (Map.Entry) it.next();
             Integer value = (Integer) pair.getValue();
 
-            while(i < size && (Integer) arrayList.get(i).getValue() > value) {
+            while(i < size && (Integer) words.get(i).getValue() >= value) {
                 i++;
             }
-            arrayList.add(i, pair);
+            words.add(i, pair);
             it.remove();
             i++;
         }
         
+        return words;
     }
     
     /**
      * Prints at most n word, number pair in descending order by the number.
      * @param n 
      */
-    public void printWords(int n) { // TODO MT: since variable 'size' is used only in the FOR  loop define it always as part of the FOR statement
-        for (int i = 0, size = arrayList.size(); i < n && i < size; i++) {
-            System.out.println(arrayList.get(i).getKey() + " = " + arrayList.get(i).getValue());
+    public void printWords(int n) {
+        ArrayList<Map.Entry> words = sortMap(n);
+        
+        for (int i = 0, size = words.size(); i < n && i < size; i++) {
+            System.out.println(words.get(i).getKey() + " = " + words.get(i).getValue());
         }
     }
    
