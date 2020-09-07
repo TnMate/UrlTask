@@ -19,31 +19,49 @@ import java.io.*;
 public class UrlAnalyzer {
     
     private final HashSet<String> skipTags  = new HashSet<>();
-    private final LinkedList<HtmlObject> htmlList = new LinkedList<>();
+    private LinkedList<HtmlObject> htmlList;
     private final WordCounter counter = new WordCounter();
     
     private String htmlString;
+    private int skipCount;
     
-    public UrlAnalyzer() { }
+    public UrlAnalyzer() { 
+        htmlList = new LinkedList<>();
+    }
     
     /**
-     * 
+     * Processes the url and adds the words into the counter.
      * @param url WebPage's url
      * @throws IOException Exception while reading the website.
      */
     public void processUrl(String url) throws IOException {
+        htmlList = new LinkedList<>();
+        skipCount = 0;
+        
         readUrl(url);
         processString();
     }
     
+    /**
+     * Prints out $number words with value in descending order by value.
+     * @param number 
+     */
     public void biggestWords(int number) {
         counter.printWords(number);
     }
     
+    /**
+     * Adds a word to omit from the analysis.
+     * @param word 
+     */
     public void addSkipWord(String word) {
         counter.addSkipWord(word);
     }
     
+    /**
+     * Adds a tag to omit from the analysis.
+     * @param tagName Name of the tag.
+     */
     public void addSkipTag(String tagName) {
         skipTags.add(tagName.toLowerCase());
     }
@@ -113,15 +131,18 @@ public class UrlAnalyzer {
     private String getNameOfTag(int startIndex, int endIndex) {        
         for (int i = startIndex + 1; i < endIndex; i++) {
             if (htmlString.charAt(i) == ' ') {
-                return htmlString.substring(startIndex, i);
+                return htmlString.substring(startIndex, i).toLowerCase();
             }
         }
         
-        return htmlString.substring(startIndex, endIndex+1);
+        return htmlString.substring(startIndex, endIndex+1).toLowerCase();
     }
     
     private void addTag(String type) {
         htmlList.addLast(new HtmlObject(HtmlObject.Type.TAG, type));
+        if (skipTags.contains(type)) {
+            skipCount++;
+        }
     }
     
     /**
@@ -130,17 +151,23 @@ public class UrlAnalyzer {
      */
     private void removeTag(String type) {        
         HtmlObject ob = htmlList.getLast();
-        boolean isSkip = skipTags.contains(type);
         
         while (!(ob.getType().equals(HtmlObject.Type.TAG) && ob.getvalue().equals(type))) {
-            if (!isSkip && ob.getType().equals(HtmlObject.Type.TEXT)) {
+            if (skipCount == 0 && ob.getType().equals(HtmlObject.Type.TEXT)) {
                 counter.addLine(ob.getvalue());
+            }
+            
+            if (skipTags.contains(ob.getvalue())) {
+                skipCount--;
             }
             htmlList.removeLast();
             ob = htmlList.getLast();
         }
         
         htmlList.removeLast();
+        if (skipTags.contains(type)) {
+                skipCount--;
+            }
 
     }
     

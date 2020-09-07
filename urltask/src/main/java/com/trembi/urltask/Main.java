@@ -30,7 +30,6 @@ public class Main {
             "https://people.inf.elte.hu/miszuu/dogs.html"
         };
         
-        analyzer.addSkipWord("a");
         analyzer.addSkipWord("dog");
         analyzer.addSkipWord("the");
         
@@ -41,13 +40,13 @@ public class Main {
             try {
                 analyzer.processUrl(urlArray[i]);
                 sb.append(urlArray[i]);
-                sb.append('\n');
+                sb.append(" webpage loaded.\n");
             } catch (IOException e) {
                 System.err.println("Error while loading a webpage, maybe wrong Url: " + e.getMessage());
             }
         }
         
-        sb.append("The loaded webpages 10 most common words");
+        sb.append("The loaded webpages 10 most common words:");
         System.out.println(sb.toString());
         analyzer.biggestWords(10);
     }
