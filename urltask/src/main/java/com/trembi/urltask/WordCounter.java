@@ -22,28 +22,14 @@ public class WordCounter {
     /**
      * It contains the stored words with counts.
      */
-    private final HashMap<String, Integer> wordsMap;
+    private final HashMap<String, Integer> wordsMap = new HashMap<>();
     
     /**
      * It contains which words to omit.
      */
-    private final HashSet<String> skipWords;
+    private final HashSet<String> skipWords = new HashSet<>();
     
-    /**
-     * Initializes the fields.
-     */
-    public WordCounter() {
-        wordsMap = new HashMap<>();
-        skipWords = new HashSet<>();
-    }
-    
-    /**
-     * Resets the stored words, omittable words, list fields in the object.
-     */
-    public final void clean() {
-        wordsMap.clear();
-        skipWords.clear();
-    }
+    public WordCounter() { }
     
     /**
      * Separates the input into words and adds them if they are not omittable.
@@ -74,15 +60,7 @@ public class WordCounter {
      * @param word Word which is not processed
      */
     public void addSkipWord(String word) {
-        skipWords.add(word);
-    }
-    
-    /**
-     * Removes the word from the field parameter.
-     * @param word 
-     */
-    public void removeSkipWord(String word) {
-        skipWords.remove(word);
+        skipWords.add(word.toLowerCase());
     }
     
     /**
@@ -103,7 +81,6 @@ public class WordCounter {
                 i++;
             }
             words.add(i, pair);
-            it.remove();
             i++;
         }
         

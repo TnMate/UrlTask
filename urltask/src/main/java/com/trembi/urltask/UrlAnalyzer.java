@@ -18,32 +18,13 @@ import java.io.*;
  */
 public class UrlAnalyzer {
     
-    private HashSet<String> skipTags;
-    private LinkedList<HtmlObject> htmlList;
-    private WordCounter counter;
+    private final HashSet<String> skipTags  = new HashSet<>();
+    private final LinkedList<HtmlObject> htmlList = new LinkedList<>();
+    private final WordCounter counter = new WordCounter();
     
     private String htmlString;
     
-    /**
-     * Constructor, sets the fields.
-     */
-    public UrlAnalyzer() {
-        clean();
-    }
-    
-    /**
-     * Resets fields
-     */
-    private void clean() {
-        skipTags = new HashSet<>();
-        htmlList = new LinkedList<>();
-        counter = new WordCounter();
-        
-        htmlString = null;
-        
-        skipTags.add("style");
-        skipTags.add("head");
-    }
+    public UrlAnalyzer() { }
     
     /**
      * 
@@ -51,13 +32,20 @@ public class UrlAnalyzer {
      * @throws IOException Exception while reading the website.
      */
     public void processUrl(String url) throws IOException {
-        clean();
         readUrl(url);
         processString();
     }
     
     public void biggestWords(int number) {
         counter.printWords(number);
+    }
+    
+    public void addSkipWord(String word) {
+        counter.addSkipWord(word);
+    }
+    
+    public void addSkipTag(String tagName) {
+        skipTags.add(tagName.toLowerCase());
     }
     
     /**
@@ -179,7 +167,6 @@ public class UrlAnalyzer {
             String inputLine;
             while ((inputLine = in.readLine()) != null)
                 sb.append(inputLine);
-            in.close(); 
 
             htmlString = sb.toString();
         } 
