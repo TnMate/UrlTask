@@ -118,7 +118,8 @@ public class WordCounter {
         ArrayList<Map.Entry> words = sortMap(n);
         
         for (int i = 0, size = words.size(); i < n && i < size; i++) {
-            System.out.println(words.get(i).getKey() + " = " + words.get(i).getValue());
+            Map.Entry item = words.get(i);
+            System.out.println(item.getKey() + " = " + item.getValue());
         }
     }
    

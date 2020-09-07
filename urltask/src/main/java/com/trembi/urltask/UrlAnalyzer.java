@@ -179,7 +179,9 @@ public class UrlAnalyzer {
         String inputLine;
         while ((inputLine = in.readLine()) != null)
             sb.append(inputLine);
-        in.close();
+        in.close(); // TODO MT: if you open a Reader then you should make sure to close it even if an exception happens
+                    // please read this link and fix this method: 
+                    // https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html
         
         htmlString = sb.toString();
     }
